@@ -1,0 +1,50 @@
+#  main:
+#    log-startup-info: false
+#  application:
+#    redis:
+#      url: redis://${REDIS_HOST}:${REDIS_PORT}
+#  jackson:
+#    property-naming-strategy: UPPER_CAMEL_CASE
+#    serialization:
+#      indent-output: false
+#  mvc:
+#    throw-exception-if-no-handler-found: true
+#    locale: de
+#    locale-resolver: fixed
+#  datasource:
+#    url: jdbc:mariadb://${MARIADB_HOST}:${MARIADB_PORT}/testdb
+#    username: ${MARIADB_USERNAME}
+#    password: ${MARIADB_PASSWORD}
+#    driver-class-name: org.mariadb.jdbc.Driver
+#    jpa.hibernate.ddl-auto: create-drop
+
+server:
+  port: 7000
+  error:
+    whitelabel:
+      enabled: false
+
+management:
+  server:
+    port: 7000
+    address: 127.0.0.1
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+    enabled-by-default: true
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+  health:
+    defaults:
+      enabled: true
+
+info:
+  app:
+    name: '@project.build.finalName@'
+    version: '@project.version@'
+    encoding: '@project.build.sourceEncoding@'
+    java:
+      version: '@java.version@'
