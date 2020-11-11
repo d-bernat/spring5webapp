@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Slf4j
@@ -66,9 +67,13 @@ public class BootStrapData implements CommandLineRunner
         log.info("Started in BootStrap...");
         log.info("Number of Books: {}", bookRepository.count());
         log.info("Number of Authors: {}", authorRepository.count());
-        log.info("Publisher books: {}", StreamSupport.stream(publisherRepository.findAll().spliterator(), false)
-                                                     .findFirst()
-                                                     .get()
-                                                     .getBooks());
+        String books = StreamSupport.stream(publisherRepository.findAll().spliterator(), false)
+                                    .findFirst()
+                                    .orElse(new Publisher())
+                                    .getBooks()
+                                    .stream()
+                                    .map(Book::toString)
+                                    .collect(Collectors.joining("::"));
+        log.info("Publisher books: {}", books);
     }
 }
