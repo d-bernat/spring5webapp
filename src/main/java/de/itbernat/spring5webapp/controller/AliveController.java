@@ -4,6 +4,8 @@ import de.itbernat.spring5webapp.repository.AuthorRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.stream.StreamSupport;
+
 @RestController
 public class AliveController
 {
@@ -17,7 +19,7 @@ public class AliveController
     @GetMapping("alive")
     public String alive()
     {
-        return ":-) " + authorRepository.findById(1L).get().toString();
+        String author = StreamSupport.stream(authorRepository.findAll().spliterator(), false).findFirst().get().toString();
+        return ":-) " + author;
     }
-
 }

@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.stream.StreamSupport;
+
 @Slf4j
 @Component
 public class BootStrapData implements CommandLineRunner
@@ -29,26 +31,44 @@ public class BootStrapData implements CommandLineRunner
     @Override
     public void run(String[] args)
     {
+        Publisher publisher = new Publisher("dbverlag", "Bekstr. 11", "Wedel", "SH", "22880");
+        publisherRepository.save(publisher);
+
         Author dusan = new Author("Dusan", "Bernat");
         Book first = new Book("Domain Driven Design", "123123");
-        dusan.getBooks().add(first);
+
+        // many to many
         first.getAuthors().add(dusan);
+        dusan.getBooks().add(first);
+
+        // one to many
+        first.setPublisher(publisher);
+        publisher.getBooks().add(first);
+
+
         authorRepository.save(dusan);
         bookRepository.save(first);
+        publisherRepository.save(publisher);
 
         Author samuel = new Author("Samuel", "Bernat");
         Book second = new Book("HSV and Kids", "321321");
-        samuel.getBooks().add(second);
+
+        //many to many
         second.getAuthors().add(samuel);
+        samuel.getBooks().add(second);
+        second.setPublisher(publisher);
+        publisher.getBooks().add(second);
+
         authorRepository.save(samuel);
         bookRepository.save(second);
-
-        Publisher publisher = new Publisher("dbverlag", "Bekstr. 11", "Wedel", "SH", "22880");
         publisherRepository.save(publisher);
 
         log.info("Started in BootStrap...");
         log.info("Number of Books: {}", bookRepository.count());
         log.info("Number of Authors: {}", authorRepository.count());
-        log.info("Number of Publishers: {}", publisherRepository.count());
+        log.info("Publisher books: {}", StreamSupport.stream(publisherRepository.findAll().spliterator(), false)
+                                                     .findFirst()
+                                                     .get()
+                                                     .getBooks());
     }
 }

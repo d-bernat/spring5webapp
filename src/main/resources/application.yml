@@ -48,3 +48,12 @@ info:
     encoding: '@project.build.sourceEncoding@'
     java:
       version: '@java.version@'
+
+spring:
+  h2:
+    console:
+      enabled: true
+  datasource:
+    username: sa
+    password: westwest
+    url: 'jdbc:h2:mem:dbtest'
